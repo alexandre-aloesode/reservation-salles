@@ -4,26 +4,24 @@
         session_start();
     }
 
+//Je connecte automatiquement l'utilisateur qui a créé son compte, et j'ai besoin de récupéré son ID ensuite. Je le fais grâce aux lignes du dessus
+    if(isset($_SESSION['user']) && !isset($_SESSION['userID'])) {
+
+                $request_ID_user = "SELECT `id` FROM `utilisateurs` WHERE login = '$_SESSION[user]'";
+                $query_ID_user = $mysqli->query($request_ID_user);
+                $result_ID_user = $query_ID_user->fetch_all();
+                $_SESSION['userID'] = $result_ID_user[0][0];
+    }   
+
     if(isset($_GET['deco']) && $_GET['deco'] == 'deco'){
         session_destroy();
         header('Location: index.php');
     }
 
-    // if(isset($_SESSION['user']) && empty($_SESSION['userID'])){
-    //     include 'connecSQL.php';
-    //     $request_ID = "SELECT id from utilisateurs WHERE login = '$_SESSION[user]'";
-    //     $query_ID = $mysqli->query($request_ID);
-    //     $result_ID = $query_ID->fetch_all();
-    //     $_SESSION['userID'] = $result_ID[0][0];
-    // }
-// Ci-dessus une requête pour récupérer la user ID au cas où il vient de créer son compte, info important car c'est celle là que j'utilise pour afficher mon header par exemple.
-// je l'ai commenté car l'exercice demande une redirection vers la page de connexion et non pas de connecter l'user à la création de son compte.
-
     $check = 0;
-// Le $check me sert pour la connexion. si $check = 0 le user n'existe pas, 
+// Le $check me sert pour la connexion. Si $check = 0 le user n'existe pas, 
 // si = 1 le nom d'user et le mdp ne correspondent pas
 // si =2 tout est bon et la connexion se fait
-    $message;
 
     if(isset($_POST['connexion']))
     {
@@ -51,5 +49,6 @@
             $message = "Connexion réussie.";
             $_SESSION['user'] = $_POST['pseudo'];
         }
-    } 
+    }
+    
 ?>

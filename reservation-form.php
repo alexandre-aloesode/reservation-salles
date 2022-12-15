@@ -39,11 +39,11 @@ include 'connec.php';
 
             if($check_add == 1) {
  
-            $request_date_events = "SELECT debut, fin FROM reservations WHERE debut BETWEEN '$date_debut' and '$date_fin' OR  fin BETWEEN '$date_debut' and '$date_fin'";
+            $request_date_events = "SELECT debut, fin FROM reservations WHERE debut BETWEEN '$date_debut' and '$date_fin' OR fin BETWEEN '$date_debut' and '$date_fin'";
             $query_date_events = $mysqli->query($request_date_events);
             $result_date_events = $query_date_events->fetch_all(); 
 
-//Je récupère les dates des évènement déjà programmés à la date de début que l'utilisateur a sélectionnée. J'utilise ensuite DateTime pour vérifier 
+//Je récupère les dates des évènement déjà programmés aux dates de début et de fin que l'utilisateur a sélectionnées. J'utilise ensuite DateTime pour vérifier 
 //si les créneaux sélectionnées sont déjà pris, grâce à la boucle for du dessous.
 
                 for($x = 0; isset($result_date_events[$x]); $x++){
@@ -87,7 +87,7 @@ include 'connec.php';
                 VALUES ('$titre', '$desc', '$date_debut', '$date_fin', '$_SESSION[userID]')";
                 
                 $query_add_event = $mysqli->query($request_add_event);
-
+                
                 if($query_add_event == true){
                     $message = 'réservation réussie';
                 }
@@ -122,7 +122,7 @@ include 'connec.php';
         <form method="post" class ="formulaire">
 
             <h2>
-                <?php echo 'Formulaire de réservation' ?> 
+                <?= 'Formulaire de réservation' ?> 
             </h2>
 
             <h3>
@@ -147,7 +147,7 @@ include 'connec.php';
 <!-- J'ai besoin de générer la date du jour pour que dans le calendrier l'utilisateur ne puisse pas sélectionner une date antèrieure au jour présent. 
 Je mets donc en min de mon input ci-dessous ma variable. -->
                 <input type="date" name="date_debut_event" value="<?php if(isset($_GET['date'])) echo $_GET['date']?>" 
-                min="<?php echo $date_min->format('Y-m-d') ?>">
+                min="<?= $date_min->format('Y-m-d') ?>">
                 <br>
 
                 <label for="start_time">Heure de début :</label>
@@ -179,7 +179,7 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
                 
                 <label for="date_fin_event">Date de fin:</label>
                 <input type="date" name="date_fin_event" value="<?php if(isset($_GET['date'])) echo $_GET['date']?>"
-                min="<?php echo $date_min->format('Y-m-d') ?>">
+                min="<?= $date_min->format('Y-m-d') ?>">
                 <br>
 
                 <label for="end_time">Heure de fin :</label>

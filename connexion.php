@@ -29,16 +29,14 @@
                 <?php endif ?>
 
                 <h3>
-                    <?php
-                        if(isset($_POST['connexion'])){
-                            echo $message;
-                        }
-                    ?>
+
+                    <?php if(isset($_POST['connexion'])) echo $message ?>
+                    
                 </h3>
 
                 <?php if(isset($_POST['connexion']) && $check == 2): ?>
 
-                    <h2>Bonjour et bienvenue <?php echo $_POST['pseudo'] ?> !</h2>
+                    <h2>Bonjour et bienvenue <?= $_POST['pseudo'] ?> !</h2>
                 
                 <?php else: ?>
                                

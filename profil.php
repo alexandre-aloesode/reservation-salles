@@ -1,10 +1,11 @@
 <?php
 
     include 'connec.php';
+    include 'connecSQL.php';
 
 // ci_dessous une requête php my admin qui me permet de récupérer les infos du profil pour les 
 // utiliser dans la page profil.php pour afficher les infos du profil du user connecté
-    include 'connecSQL.php';
+   
     $request_fetch_user_info= "SELECT * FROM `utilisateurs` where id = '$_SESSION[userID]'";
     $query_fetch_user_info = $mysqli->query($request_fetch_user_info);
     $result_fetch_user_info = $query_fetch_user_info->fetch_all();
@@ -71,20 +72,17 @@
         }
     }
 
-// Ci_dessous ma requête pour supprimer le profil, et suppression en cascade de ses commentaires dans la base de données.
-    // if(isset($_POST['delete_profile'])){
+// Ci_dessous ma requête pour supprimer le profil, et suppression en cascade de ses réservations dans la base de données.
+    if(isset($_POST['delete_profile'])){
         
-    //     $request_delete_profile_comments = "DELETE FROM `commentaires` WHERE commentaires.id_utilisateur = '$_SESSION[userID]'";
-    //     $query_delete_profile_comments = $mysqli->query($request_delete_profile_comments);
+        $request_delete_profile_resa = "DELETE FROM `reservations` WHERE reservations.id_utilisateur = '$_SESSION[userID]'";
+        $query_delete_profile_resa = $mysqli->query($request_delete_profile_resa);
 
-    //     $request_delete_profile_answers = "DELETE FROM `reponses` WHERE reponses.id_utilisateur = '$_SESSION[userID]'";
-    //     $query_delete_profile_answers = $mysqli->query($request_delete_profile_answers);
-
-    //     $request_delete_profile = "DELETE FROM `utilisateurs` WHERE utilisateurs.id = '$_SESSION[userID]'";
-    //     $query_delete_profile = $mysqli->query($request_delete_profile);
-    //     session_destroy();
-    //     header('Location: index.php');
-    // }
+        $request_delete_profile = "DELETE FROM `utilisateurs` WHERE utilisateurs.id = '$_SESSION[userID]'";
+        $query_delete_profile = $mysqli->query($request_delete_profile);
+        session_destroy();
+        header('Location: index.php');
+    }
 ?>
 
 <!DOCTYPE html>
@@ -109,7 +107,9 @@
     <main>
         
         <form method="post" class ="formulaire">
+
         <h2>MODIFICATION DE PROFIL</h2>
+
         <h3>
            <?php 
                 if(isset($_POST['profil_change'])) { 
@@ -117,8 +117,9 @@
                 }
             ?>
         </h3>
+
             <label for="pseudo">Pseudo : </label>
-            <input type="text" name="profil_pseudo" value="<?php echo $result_fetch_user_info[0][1]?>" >
+            <input type="text" name="profil_pseudo" value="<?= $result_fetch_user_info[0][1]?>" >
             <br>       
 <!-- infos des values récupérées grâce à ma requête sql du haut de la page -->
 
@@ -141,7 +142,10 @@
         <form method="post" class="formulaire">
                 <button type="submit" id="delete_profile" name="delete_profile">Supprimer mon compte</button>
         </form>
+
     </main>
+
     <?php include 'footer.php' ?>
+
 </body>
 </html>

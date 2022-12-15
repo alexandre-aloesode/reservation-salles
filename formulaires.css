@@ -94,3 +94,9 @@
         padding: 20px;
         height: fit-content;
     }
+
+    #delete_resa {
+        background-color: red;
+        padding: 20px;
+        height: fit-content;
+    }

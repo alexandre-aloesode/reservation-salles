@@ -4,8 +4,11 @@
 
     <nav>
         <ul>
+
             <li><a href="index.php">Accueil</a></li>
+
             <li><a href="planning.php">Planning</a></li>
+            
         </ul>
     </nav>
 

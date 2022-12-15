@@ -16,6 +16,22 @@ main {
         font-size: 130%;
     }
 
+    #previous_week:hover {
+        transform: translateX(-5px);
+        background-color: gold;
+    }
+
+    #today_button:hover {
+        background-color: gold;
+        transform: scale(1.15);
+        transition-duration: 0.5s;
+    }
+
+    #next_week:hover {
+        transform: translateX(5px);
+        background-color: gold;
+    }
+
 table {
     border-collapse: collapse;
     width: 100%;
