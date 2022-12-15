@@ -151,7 +151,7 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
                 <br>
 
                 <label for="start_time">Heure de début :</label>
-                <select name="start_time" value="15">
+                <select name="start_time">
 
                     <?php for($x = 8; $x < 19; $x++) {
 
@@ -188,20 +188,23 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
                     <?php for($x = 9; $x < 20; $x++) {
 
                         if($x < 10) {
-                            if($x == $_GET['heure']){
-                                echo '<option selected>0' . $x . '</option>';
+                            if($x == $_GET['heure']) {
+                                if($x == 8) {
+                                    $x++;
+                                    echo '<option selected>0' . $x . '</option>';
+                                }
                             }
-                            else{
+                            else {
                                 echo '<option>0' . $x . '</option>';
-                            }
-                            
+                            }                           
                         }
+
                         else {
-                            if($x == $_GET['heure']){
+                            if($x == $_GET['heure']) {
                                 $x++;
                                 echo '<option selected>' . $x . '</option>';
                             }
-                            else{
+                            else {
                                 echo '<option>' . $x . '</option>';
                             }
                         }
@@ -225,9 +228,6 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
     </main>
 
     <?php include 'footer.php' ?>
-
-
-
 
 </body>
 </html>
