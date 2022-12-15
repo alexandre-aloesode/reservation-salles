@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&family=Roboto:ital,wght@1,300&display=swap');
+
+footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    height: 200px;
+    padding-left: 50px;
+    padding-right: 50px;
+    margin-top: 200px;
+    background-color: #BEA7E5;
+    font-family: 'PT Sans Narrow', sans-serif;
+}
+
+    #copyright {
+    font-size: 120%;
+    }
+
+    #links {
+        font-size: 300%;
+        width: 25%;
+    }
+
+    #arrow_top {
+        font-size: 300%;
+    }
+
+    footer a{
+        text-decoration: none;
+        color: black;
+    }

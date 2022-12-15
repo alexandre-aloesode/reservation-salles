@@ -1,0 +1,96 @@
+
+.formulaire {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    padding: 30px;
+    width: 30%;
+    font-size: 120%;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: 5px 5px 5px 5px white;
+}
+
+.formulaire h2 {
+    background-color: white;
+    border-bottom: solid 2px purple;
+    font-size: 120%;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    }
+
+.formulaire h3 {
+    background-color: white;
+    font-size: 120%;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+    color: red;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    }
+
+    .formulaire label {
+        display: flex;
+        justify-content: center;
+        width: 80%;
+        background-color: white;
+        font-size: 90%;
+    }
+
+    .formulaire input {
+        width: 80%;
+        height: 50px;
+        border-radius: 5px;
+        border: 1px solid #6B4B3E;
+        outline-color: purple;
+        background-color: white;
+        font-size: 100%;
+    }
+    
+    .formulaire button {
+        height: 40px;
+        font-size: 100%;
+        border-radius: 5px;
+        background-color: purple;
+        color: white;
+        border: none;
+        width: 50%;
+    }
+
+    .formulaire button:hover {
+        transform: scale(1.05);
+        transition-duration: 0.5s;
+    } 
+
+    .formulaire textarea {
+        width: 80%;
+        height: 80px;
+        border-radius: 5px;
+        border: 1px solid #6B4B3E;
+        outline-color: purple;
+        background-color: white;
+        font-size: 100%;
+        resize: none;
+    }
+
+    .formulaire select {
+        width: 80%;
+        height: 50px;
+        border-radius: 5px;
+        border: 1px solid #6B4B3E;
+        outline-color: purple;
+        background-color: white;
+        font-size: 100%;
+    }
+
+    #delete_profile {
+        background-color: red;
+        padding: 20px;
+        height: fit-content;
+    }
