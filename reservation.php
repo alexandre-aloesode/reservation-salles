@@ -164,9 +164,9 @@ if(isset($_POST['modify'])) {
 
                 <form method="get" class="formulaire">
 
-                <button type="submit" id="modify_resa" name="modify_resa" value="<?= $_GET['id'] ?>">Modifier</button>     
+                    <button type="submit" id="modify_resa" name="modify_resa" value="<?= $_GET['id'] ?>">Modifier</button>     
 
-                <button type="submit" id="delete_resa" name="delete_resa" value="<?= $_GET['id'] ?>">Supprimer</button>           
+                    <button type="submit" id="delete_resa" name="delete_resa" value="<?= $_GET['id'] ?>">Supprimer</button>           
                     
                 <?php endif ?>
             
@@ -247,7 +247,7 @@ if(isset($_POST['modify'])) {
                             echo '<option>0' . $x . '</option>';
                         }                         
                     }
-                    
+
                     else {
                         if($x == $date_fin_modify->format('H')){
                             echo '<option selected>' . $x . '</option>';

@@ -95,6 +95,11 @@
         height: fit-content;
     }
 
+    #modify_resa {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
     #delete_resa {
         background-color: red;
         padding: 20px;
