@@ -12,7 +12,8 @@ include 'connec.php';
 
 //Vérification si tous les champs sont remplis       
         if(empty($_POST['titre']) || empty($_POST['desc']) || empty($_POST['start_time']) || empty($_POST['end_time']) 
-        || empty($_POST['date_debut_event']) || empty($_POST['date_fin_event'])) {
+        || empty($_POST['date_debut_event']) || empty($_POST['date_fin_event']) || trim($_POST['titre']) == '') {
+
             $check_add = 0;
             $message = "Veuillez remplir tous les champs";
         }
@@ -48,32 +49,29 @@ include 'connec.php';
 
                 for($x = 0; isset($result_date_events[$x]); $x++){
 
-                    $heure_debut = str_split($result_date_events[$x][0], 10);
-                    $heure_debut = $heure_debut[1];
-                    $check_heure_debut = new DateTime($heure_debut);
-
-                    $heure_fin = str_split($result_date_events[$x][1], 10);
-                    $heure_fin = $heure_fin[1];
-                    $check_heure_fin = new DateTime($heure_fin);
-
-                    if($check_heure_debut->format('H') == $_POST['start_time'] || $check_heure_fin->format('H') == $_POST['end_time']) {
-                        $check_add = 0;
-                        $message = 'Cette plage horaire est déjà réservée';
-                        break;
-                    }
+                    $date_debut_SQL = new DateTime($result_date_events[$x][0]);
+                    $date_fin_SQL = new DateTime($result_date_events[$x][1]);
 
 //On a aussi besoin de vérifier qu'une réservation ne se chevauche pas avec un créneau déjà pris. Je crée donc une variable i qui va de l'heure' de début à l'
 // heure de fin de l'event de l'utilisateur. Si sur l'intervalle, i matche avec un évènement de ma table, c'est que l'event de l'utilisateur va chevaucher un event 
 // déjà prévu. J'enlève 1 à l'heure'de fin car si par exemple on veut programmer un event de 15 à 16 et qu'il y en a déjà un de 16 à 17, ma boucle est erronnée.
-                    if($check_add == 1) {
+
+                    if($check_add == 1 && $_POST['end_time'] > $_POST['start_time']) {
+
                         for($i = $_POST['start_time']; $i < $_POST['end_time']; $i++) {
-                            if($i == $check_heure_debut->format('H') || $i == ($check_heure_fin->format('H') - 1)) {
+                            if($i == $date_debut_SQL->format('H') || $i == ($date_fin_SQL->format('H') - 1)) {
                                 $check_add = 0;
                                 $message = 'Votre réservation se chevauche sur une autre';
                                 break;
                             }
                         }
-                    }        
+                    }  
+
+                    if($date_debut_SQL->format('H') == $_POST['start_time'] || $date_fin_SQL->format('H') == $_POST['end_time']) {
+                        $check_add = 0;
+                        $message = 'Cette plage horaire est déjà réservée';
+                        break;
+                    }                       
                 }
             }
 

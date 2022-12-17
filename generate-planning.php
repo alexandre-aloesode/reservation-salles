@@ -106,7 +106,7 @@ function corps_planning($requete_events) {
 
         echo '<tr>';
 
-            echo '<td class="creneaux">' . $date->format('H') . ' H </td>';
+            echo '<td class="creneaux">' . $date->format('H') . ' à ' . ($date->format('H')+1) . ' H </td>';
 
                 for($i = 0; $i < 7; $i++) {
 

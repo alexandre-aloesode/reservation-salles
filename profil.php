@@ -15,7 +15,7 @@
 
     if(isset($_POST['profil_change'])) {  
 
-        if(empty($_POST['profil_pseudo']) || empty($_POST['profil_new_mdp'])) {
+        if(empty($_POST['profil_pseudo']) || empty($_POST['profil_new_mdp']) || trim($_POST['profil_pseudo'] == '' || trim($_POST['profil_new_mdp'])) == '') {
             $message_profil = 'Certains champs sont vides';
         }
 
