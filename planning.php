@@ -1,4 +1,4 @@
-<?php include 'generate-planning.php' ?>
+<?php include 'generate-planning.php'?>
 
 <!DOCTYPE html>
 <html lang="fr">

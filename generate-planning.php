@@ -98,7 +98,7 @@ $date = new DateTime("$_SESSION[date]"); new DateTimeZone("Europe/Paris");
 //     -La deuxième génère les colonnes, à savoir les 7 jours
 //     -la 3ême vient parcourir ma requete dans les reservations et s'il y a un match de date m'affiche l'évènement.
 
-function corps_planning($planning) {
+function corps_planning($requete_events) {
 
     for($x = 0; $x < 11; $x++) {  
 
@@ -128,11 +128,11 @@ function corps_planning($planning) {
 // Je modifie les dates du planning, et les dates de la table réservation en format Y-m-d H pour qu'elles aient la même structure et soit en format string, comme ça je peux 
 // les comparer. Si elles sont == je viens donc afficher l'évènement. J'ai besoin donc de supprimer les minutes/secondes pour avoir un match.
                     
-                        for($j = 0; isset($planning[$j]); $j++){
+                        for($j = 0; isset($requete_events[$j]); $j++){
         
-                            $date_sql_debut = new DateTime($planning[$j][2]);
+                            $date_sql_debut = new DateTime($requete_events[$j][2]);
                
-                            $date_sql_fin = new DateTime($planning[$j][3]);
+                            $date_sql_fin = new DateTime($requete_events[$j][3]);
                             $date_sql_fin -> modify('-1 hour');
 // J'ai besoin d'enlever une heure à la date de fin pour qu'elle soit prise en compte dans mon tableau.
 
@@ -145,20 +145,34 @@ function corps_planning($planning) {
 
                                     if(isset($_SESSION['userID'])) {
 
-                                        echo '<a class="booked" href="reservation.php?id=' . $planning[$j][0] .'">';
+                                        // if($date_sql_fin > $date_sql_debut && $date_planning > $date_sql_debut->format('Y-m-d H')) {
 
-                                        echo '<p class="booked">' . $planning[$j][6] . '<br>';
+                                        //     echo '<a class="booked" href="reservation.php?id=' . $planning[$j][0] .'">';
 
-                                        echo $planning[$j][1] . '</p>';
+                                        //     echo '<p class="booked" rowspan = "' . ($date_sql_fin->format('H') - $date_sql_debut->format('H')) . '"> <br>';
+
+                                        //     echo '</p>';
+
+                                        //     echo '</a>';
+                                        // }
+
+                                        // else {
+
+                                        echo '<a class="booked" href="reservation.php?id=' . $requete_events[$j][0] .'">';
+
+                                        echo '<p class="booked">' . $requete_events[$j][6] . '<br>';
+
+                                        echo $requete_events[$j][1] . '</p>';
 
                                         echo '</a>';
+                                        // }
                                     }
 
                                     else {
 
-                                        echo '<p class="booked">' . $planning[$j][6] . '<br>';
+                                        echo '<p class="booked">' . $requete_events[$j][6] . '<br>';
 
-                                        echo $planning[$j][1] . '</p>';
+                                        echo $requete_events[$j][1] . '</p>';
                                     }
                                                                              
                             }                                                                 

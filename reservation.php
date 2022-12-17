@@ -70,33 +70,42 @@ if(isset($_POST['modify'])) {
 
         if($check_modify == 1) {
 
-        $request_date_events = "SELECT debut, fin FROM reservations WHERE debut BETWEEN '$date_debut' and '$date_fin' OR fin BETWEEN '$date_debut' and '$date_fin'
-        EXCEPT SELECT debut, fin FROM reservations WHERE id = '$_SESSION[commentID]'";
+        // $request_date_events = "SELECT debut, fin FROM reservations WHERE debut BETWEEN '$date_debut' and '$date_fin' OR fin BETWEEN '$date_debut' and '$date_fin'
+        // EXCEPT SELECT debut, fin FROM reservations WHERE id = '$_SESSION[commentID]'";
+        
+        //La condition EXCEPT n'est pas incluse dans la version de mariadb sur plesk en live, je remets la requête normale et j'ajoute une condiion dans le if de ma boucle
+
+        $request_date_events = "SELECT id, debut, fin FROM reservations WHERE debut BETWEEN '$date_debut' and '$date_fin' OR fin BETWEEN '$date_debut' and '$date_fin'";
         $query_date_events = $mysqli->query($request_date_events);
         $result_date_events = $query_date_events->fetch_all(); 
 
             for($x = 0; isset($result_date_events[$x]); $x++){
 
-                $heure_debut = str_split($result_date_events[$x][0], 10);
+                $heure_debut = str_split($result_date_events[$x][1], 10);
                 $heure_debut = $heure_debut[1];
                 $check_heure_debut = new DateTime($heure_debut);
 
-                $heure_fin = str_split($result_date_events[$x][1], 10);
+                $heure_fin = str_split($result_date_events[$x][2], 10);
                 $heure_fin = $heure_fin[1];
                 $check_heure_fin = new DateTime($heure_fin);
 
                 if($check_heure_debut->format('H') == $_POST['start_time'] || $check_heure_fin->format('H') == $_POST['end_time']) {
-                    $check_modify = 0;
-                    $message = 'Cette plage horaire est déjà réservée';
-                    break;
+
+                    if($result_date_events[$x][0] !== $_SESSION['commentID']) {
+                        $check_modify = 0;
+                        $message = 'Cette plage horaire est déjà réservée';
+                        break;
+                    }
                 }
 
                 if($check_modify == 1) {
                     for($i = $_POST['start_time']; $i < $_POST['end_time']; $i++) {
                         if($i == $check_heure_debut->format('H') || $i == ($check_heure_fin->format('H') - 1)) {
-                            $check_modify = 0;
-                            $message = 'Votre réservation se chevauche sur une autre';
-                            break;
+                            if($result_date_events[$x][0] !== $_SESSION['commentID']) {
+                                $check_modify = 0;
+                                $message = 'Votre réservation se chevauche sur une autre';
+                                break;
+                            }
                         }
                     }
                 }        
