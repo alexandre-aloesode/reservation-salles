@@ -2,11 +2,12 @@
 
 include 'connecSQL.php';
 include 'connec.php';
+include 'functions.php';
 
 // Ci_dessous mes 2 requêtes pour afficher les détails de la résa si l'utilisateur est connecté, et pour la supprimer si la résa appartient à l'utilisateur connecté.
 if(isset($_GET['id'])) {
 
-    $_SESSION['commentID'] = $_GET['id'];
+    $_SESSION['eventID'] = $_GET['id'];
 
     $request_event = "SELECT * FROM reservations 
     INNER JOIN utilisateurs ON reservations.id_utilisateur = utilisateurs.id
@@ -18,7 +19,7 @@ if(isset($_GET['id'])) {
     
 if(isset($_GET['delete_resa'])) {
 
-        $request_delete_event = "DELETE FROM reservations WHERE id = '$_SESSION[commentID]'";
+        $request_delete_event = "DELETE FROM reservations WHERE id = '$_SESSION[eventID]'";
         $query_delete_event = $mysqli->query($request_delete_event);
         header('Location: planning.php');
 }
@@ -26,7 +27,7 @@ if(isset($_GET['delete_resa'])) {
 //Ci-dessous mes 2 requêtes pour récupérer les infos de la résa existantes, puis pour la modifier
 if(isset($_GET['modify_resa'])) {
 
-    $request_event = "SELECT * FROM reservations WHERE id = '$_SESSION[commentID]'";
+    $request_event = "SELECT * FROM reservations WHERE id = '$_SESSION[eventID]'";
     $query_event = $mysqli->query($request_event);
     $result_event = $query_event->fetch_all();
 
@@ -39,94 +40,7 @@ if(isset($_GET['modify_resa'])) {
     $date_fin_modify = new DateTime(($date_de_fin));
 }
 
-if(isset($_POST['modify'])) {
-        
-    $check_modify = 1;
-    
-    if(empty($_POST['titre']) || empty($_POST['desc']) || empty($_POST['start_time']) || empty($_POST['end_time']) 
-    || empty($_POST['date_debut_event']) || empty($_POST['date_fin_event'])) {
-        $check_modify = 0;
-        $message = "Veuillez remplir tous les champs";
-    }
 
-    if($check_modify == 1){
-        $date_debut = new DateTime($_POST['date_debut_event']);
-        $date_fin = new DateTime($_POST['date_fin_event']);
-        if($date_debut->format('D') == 'Sat' || $date_debut->format('D') == 'Sun' || $date_fin->format('D') == 'Sat' || $date_fin->format('D') == 'Sun') {
-            $check_modify = 0;
-            $message = "Nous sommes fermés les week-ends";
-        }
-    }
-
-    if($check_modify == 1) {
-
-        $date_debut = $_POST['date_debut_event'] . ' ' . $_POST['start_time'];      
-        $date_fin = $_POST['date_fin_event'] . ' ' . $_POST['end_time'];
-
-        if($date_debut >= $date_fin) {
-        $check_modify = 0;
-        $message = "Erreur dans les créneaux horaires";
-        }
-
-        if($check_modify == 1) {
-
-        // $request_date_events = "SELECT debut, fin FROM reservations WHERE debut BETWEEN '$date_debut' and '$date_fin' OR fin BETWEEN '$date_debut' and '$date_fin'
-        // EXCEPT SELECT debut, fin FROM reservations WHERE id = '$_SESSION[commentID]'";
-        
-        //La condition EXCEPT n'est pas incluse dans la version de mariadb sur plesk en live, je remets la requête normale et j'ajoute une condiion dans le if de ma boucle
-
-        $request_date_events = "SELECT id, debut, fin FROM reservations WHERE debut BETWEEN '$date_debut' and '$date_fin' OR fin BETWEEN '$date_debut' and '$date_fin'";
-        $query_date_events = $mysqli->query($request_date_events);
-        $result_date_events = $query_date_events->fetch_all(); 
-
-            for($x = 0; isset($result_date_events[$x]); $x++){
-
-                $heure_debut = str_split($result_date_events[$x][1], 10);
-                $heure_debut = $heure_debut[1];
-                $check_heure_debut = new DateTime($heure_debut);
-
-                $heure_fin = str_split($result_date_events[$x][2], 10);
-                $heure_fin = $heure_fin[1];
-                $check_heure_fin = new DateTime($heure_fin);
-
-                if($check_heure_debut->format('H') == $_POST['start_time'] || $check_heure_fin->format('H') == $_POST['end_time']) {
-
-                    if($result_date_events[$x][0] !== $_SESSION['commentID']) {
-                        $check_modify = 0;
-                        $message = 'Cette plage horaire est déjà réservée';
-                        break;
-                    }
-                }
-
-                if($check_modify == 1) {
-                    for($i = $_POST['start_time']; $i < $_POST['end_time']; $i++) {
-                        if($i == $check_heure_debut->format('H') || $i == ($check_heure_fin->format('H') - 1)) {
-                            if($result_date_events[$x][0] !== $_SESSION['commentID']) {
-                                $check_modify = 0;
-                                $message = 'Votre réservation se chevauche sur une autre';
-                                break;
-                            }
-                        }
-                    }
-                }        
-            }
-        }
-
-        if($check_modify == 1) {
-        
-            $titre = mysqli_real_escape_string($mysqli, $_POST['titre']);
-            $desc = mysqli_real_escape_string($mysqli, $_POST['desc']);
-        
-            $request_modify_event = "UPDATE reservations SET titre = '$titre', description =  '$desc', debut = '$date_debut' , fin = '$date_fin' WHERE id = '$_SESSION[commentID]'";
-            
-            $query_modify_event = $mysqli->query($request_modify_event);
-            
-            if($query_modify_event == true){
-                $message = 'modification effectuée';
-            }
-        }
-    }
-}
 
 ?>
 
@@ -187,12 +101,12 @@ if(isset($_POST['modify'])) {
 
         <form method="post" class ="formulaire">
 
-            <h2> <?= 'Modifier mon évènement' ?> </h2>
+            <h2>Modifier mon évènement</h2>
 
             <h3>
                 <?php 
                     if(isset($_POST['modify'])) { 
-                        echo $message;
+                        echo add_modify_event();
                     }
                 ?>
             </h3>

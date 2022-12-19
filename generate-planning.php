@@ -103,16 +103,16 @@ function corps_planning($requete_events) {
     for($x = 0; $x < 11; $x++) {  
 
         $date = new DateTime("$_SESSION[date] midnight + 8 hours + $x hours"); new DateTimeZone("Europe/Paris");
+// Pour afficher dans le planning les créneaux en mettant de x à y heures, j'ai besoin d'une 2ème variable datetime à laquelle j'ajoute une heure.
+        $date_creneau_sup = new DateTime("$_SESSION[date] midnight + 8 hours + $x hours"); new DateTimeZone("Europe/Paris");
 
         echo '<tr>';
 
-            echo '<td class="creneaux">' . $date->format('H') . ' à ' . ($date->format('H')+1) . ' H </td>';
+            echo '<td class="creneaux">' . $date->format('H') . ' à ' . $date_creneau_sup->modify('+ 1 hours')->format('H') .' H </td>';
 
                 for($i = 0; $i < 7; $i++) {
 
                     echo '<td>';
-
-                    $date_planning = $date->format('Y-m-d H');
 
                         $check = 1;
 // Je crée une variable check qui vient changer si un évènement est affiché dans une des cases. Si le check reste = 1 on affiche le href réserver. 
@@ -125,7 +125,7 @@ function corps_planning($requete_events) {
                         }
 
 // Ci-dessous je crée une variable qui récupère la date à laquelle je suis dans ma boucle, et avec laquelle je vais parcourir ma requête des évènements pour trouver un match. 
-// Je modifie les dates du planning, et les dates de la table réservation en format Y-m-d H pour qu'elles aient la même structure et soit en format string, comme ça je peux 
+// Je modifie les dates du planning, et les dates de la table réservation en format Y-m-d H pour qu'elles aient la même structure, comme ça je peux 
 // les comparer. Si elles sont == je viens donc afficher l'évènement. J'ai besoin donc de supprimer les minutes/secondes pour avoir un match.
                     
                         for($j = 0; isset($requete_events[$j]); $j++){
@@ -136,8 +136,8 @@ function corps_planning($requete_events) {
                             $date_sql_fin -> modify('-1 hour');
 // J'ai besoin d'enlever une heure à la date de fin pour qu'elle soit prise en compte dans mon tableau.
 
-                            if($date_planning >= $date_sql_debut->format('Y-m-d H') && $date_planning <= $date_sql_fin->format('Y-m-d H')) {
-//Grâce aux 2 conditions du dessus je remplis également les cases entre la date de début et celle de fin, quand la résa dure plus de 2 heures.
+                            if($date->format('Y-m-d H') >= $date_sql_debut->format('Y-m-d H') && $date->format('Y-m-d H') <= $date_sql_fin->format('Y-m-d H')) {
+//Grâce aux 2 conditions du dessus je remplis également les cases entre la date de début et celle de fin, quand la résa dure plus d'1 heure.
                                    
                                     $check = 0;
 
@@ -173,20 +173,17 @@ function corps_planning($requete_events) {
                                         echo '<p class="booked">' . $requete_events[$j][6] . '<br>';
 
                                         echo $requete_events[$j][1] . '</p>';
-                                    }
-                                                                             
+                                    }                                                                            
                             }                                                                 
                         }
 
                          if($check == 1){
 
                             if(isset($_SESSION['userID'])) {
-//Pour que quand l'utilisateur connecté clique sur un créneau vide et soit renvoyé vers le formulaire pré-rempli  je crée la variable ci-dessous qui 
-// split la date du planning en 2: la date et l'heure
-                                $form_pre_rempli = str_split($date_planning, 10);
 
-                                echo '<a class="bookable" href="reservation-form.php?date=' 
-                                . $form_pre_rempli[0].'&heure=' . $form_pre_rempli[1] .'">';
+//Pour que quand l'utilisateur connecté clique sur un créneau vide et soit renvoyé vers le formulaire pré-rempli :
+                            
+                                echo '<a class="bookable" href="reservation-form.php?date=' . $date->format('Y-m-d').'&heure_debut=' . $date->format('H') .'&heure_fin=' . $date_creneau_sup->format('H') .'">';
 
                                 echo '<p class="bookable"> <b> Réserver </b> </p>';
 

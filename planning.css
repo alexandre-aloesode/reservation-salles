@@ -73,8 +73,9 @@ table a {
         margin: 0%;
         padding: 0%;
         border: solid 2px purple;
-        width: 10%;
+        width: 5%;
         height: 40px;
+        word-wrap: break-word;
       }
       
       .creneaux {
