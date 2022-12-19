@@ -24,7 +24,7 @@ if(isset($_GET['delete_resa'])) {
         header('Location: planning.php');
 }
 
-//Ci-dessous mes 2 requêtes pour récupérer les infos de la résa existantes, puis pour la modifier
+//Ci-dessous mes 2 requêtes pour récupérer les infos de la résa existantes et les afficher
 if(isset($_GET['modify_resa'])) {
 
     $request_event = "SELECT * FROM reservations WHERE id = '$_SESSION[eventID]'";
@@ -39,8 +39,6 @@ if(isset($_GET['modify_resa'])) {
     $date_de_fin= $result_event[0][4];
     $date_fin_modify = new DateTime(($date_de_fin));
 }
-
-
 
 ?>
 
@@ -67,7 +65,8 @@ if(isset($_GET['modify_resa'])) {
 
 <!-- Ci-dessous j'affiche le formulaire avec les infos de la résa. Accessible seulement si le visiteur est connecté. -->
 
-            <?php if(isset($_SESSION['userID']) && isset($_GET['id'])): ?>
+    <?php if(isset($_SESSION['userID']) && isset($_GET['id'])): ?>
+
         <form class ="formulaire">
                 <h1><?= $result_event[0][1] ?></h1>
 
@@ -83,21 +82,25 @@ if(isset($_GET['modify_resa'])) {
                 <p> <?= $result_event[0][4] ?> </p>
 
 <!-- Si la résa appartient à l'utilisateur connecté, j'affiche ci-dessous 2 boutons: supprimer et modifier. -->
-                <?php if($result_event[0][5] == $_SESSION['userID']) :?> 
+                
+        <?php if($result_event[0][5] == $_SESSION['userID']) :?> 
 
                 <form method="get" class="formulaire">
 
                     <button type="submit" id="modify_resa" name="modify_resa" value="<?= $_GET['id'] ?>">Modifier</button>     
 
-                    <button type="submit" id="delete_resa" name="delete_resa" value="<?= $_GET['id'] ?>">Supprimer</button>           
+                    <button type="submit" id="delete_resa" name="delete_resa" value="<?= $_GET['id'] ?>">Supprimer</button> 
+
+                </form>         
                     
-                <?php endif ?>
-            
-                </form>
+        <?php endif ?>         
+                
         </form>
+
+        
 <!-- Si l'utilisateur a cliqué pour modifier sa résa, j'affiche ci-dessous le form de modification en affichant les détails actuels de la résa -->
 
-            <?php elseif(isset($_GET['modify_resa'])): ?>
+    <?php elseif(isset($_GET['modify_resa'])): ?>
 
         <form method="post" class ="formulaire">
 
@@ -127,28 +130,7 @@ if(isset($_GET['modify_resa'])) {
 
             <label for="start_time">Heure de début :</label>
             <select name="start_time">
-
-                <?php for($x = 8; $x < 19; $x++) {
-
-                    if($x < 10) {
-                        if($x == $date_debut_modify->format('H')) {
-                            echo '<option selected>0' . $x . '</option>';
-                        }
-                        else {
-                            echo '<option>0' . $x . '</option>';
-                        }
-                    }
-
-                    else {
-                        if($x == $date_debut_modify->format('H')) {
-                            echo '<option selected>' . $x . '</option>';
-                        }
-                        else {
-                            echo '<option>' . $x . '</option>';
-                        }
-                    }
-                }
-                    ?>
+            <?php horaires(8, 18, $date_debut_modify->format('H')) ?>
             </select>
             <br>
                 
@@ -159,28 +141,7 @@ if(isset($_GET['modify_resa'])) {
 
             <label for="end_time">Heure de fin :</label>
             <select name="end_time">
-
-                <?php for($x = 9; $x < 20; $x++) {
-
-                    if($x < 10) {
-                        if($x == $date_fin_modify->format('H')){
-                            echo '<option selected>0' . $x . '</option>';
-                        }
-                        else{
-                            echo '<option>0' . $x . '</option>';
-                        }                         
-                    }
-
-                    else {
-                        if($x == $date_fin_modify->format('H')){
-                            echo '<option selected>' . $x . '</option>';
-                        }
-                        else {
-                            echo '<option>' . $x . '</option>';
-                        }
-                    }
-                }
-                ?>
+            <?php horaires(9, 19, $date_fin_modify->format('H')) ?>
             </select>
             <br>
            
@@ -191,11 +152,11 @@ if(isset($_GET['modify_resa'])) {
             <button type="submit" name="modify">Modifier</button>
         </form>  
 
-        <?php else: ?>
+    <?php else: ?>
 
             <h1>Connecte-toi petit coquin!</h1>
 
-        <?php endif ?>
+    <?php endif ?>
         
     </main> 
 

@@ -34,9 +34,7 @@ include 'functions.php';
 
         <form method="post" class ="formulaire">
 
-            <h2>
-                <?= 'Formulaire de réservation' ?> 
-            </h2>
+            <h2>Formulaire de réservation</h2>
 
             <h3>
                 <?php 
@@ -64,7 +62,7 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
 
                 <label for="start_time">Heure de début :</label>
                 <select name="start_time">
-                    <?php horaires(8, 18, 'debut') ?>
+                    <?php horaires(8, 18, $_GET['heure_debut']) ?>
                 </select>
                 <br>
                 
@@ -74,7 +72,7 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
 
                 <label for="end_time">Heure de fin :</label>
                 <select name="end_time">
-                    <?php horaires(9, 19, 'fin') ?>
+                    <?php horaires(9, 19, $_GET['heure_fin']) ?>
                 </select>
                 <br>
            

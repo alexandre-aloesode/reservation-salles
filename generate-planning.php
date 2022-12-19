@@ -181,9 +181,10 @@ function corps_planning($requete_events) {
 
                             if(isset($_SESSION['userID'])) {
 
-//Pour que quand l'utilisateur connecté clique sur un créneau vide et soit renvoyé vers le formulaire pré-rempli :
+//Pour que quand l'utilisateur connecté clique sur un créneau vide et soit renvoyé vers le formulaire pré-rempli avec par défaut une heure de plus en heure de fin:
                             
-                                echo '<a class="bookable" href="reservation-form.php?date=' . $date->format('Y-m-d').'&heure_debut=' . $date->format('H') .'&heure_fin=' . $date_creneau_sup->format('H') .'">';
+                                echo '<a class="bookable" href="reservation-form.php?date=' . $date->format('Y-m-d').'&heure_debut=' 
+                                . $date->format('H') .'&heure_fin=' . $date_creneau_sup->format('H') .'">';
 
                                 echo '<p class="bookable"> <b> Réserver </b> </p>';
 
