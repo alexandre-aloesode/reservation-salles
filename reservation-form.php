@@ -3,10 +3,6 @@
 include 'connecSQL.php';
 include 'connec.php';
 include 'functions.php';
-
-//Ci-dessous mes vérifications si l'utilisateur envoie sa demande. La variable check_add reste à 1 si toutes les conditions sont validées. 
-//Dès qu'une condition ne l'est pas la variable = 0 et donc toutes les conditions qui restent s'annulent.
-
         
 ?>
 

@@ -19,9 +19,9 @@ if(isset($_GET['id'])) {
     
 if(isset($_GET['delete_resa'])) {
 
-        $request_delete_event = "DELETE FROM reservations WHERE id = '$_SESSION[eventID]'";
-        $query_delete_event = $mysqli->query($request_delete_event);
-        header('Location: planning.php');
+    $request_delete_event = "DELETE FROM reservations WHERE id = '$_SESSION[eventID]'";
+    $query_delete_event = $mysqli->query($request_delete_event);
+    header('Location: planning.php');
 }
 
 //Ci-dessous mes 2 requêtes pour récupérer les infos de la résa existantes et les afficher
@@ -57,6 +57,7 @@ if(isset($_GET['modify_resa'])) {
     <link href="footer.css" rel = "stylesheet">
     <title>Inscription</title>
 </head>
+
 <body>
 
     <?php include 'header.php' ?>
