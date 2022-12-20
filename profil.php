@@ -5,11 +5,13 @@
 
 // ci_dessous une requête php my admin qui me permet de récupérer les infos du profil pour les 
 // utiliser dans la page profil.php pour afficher les infos du profil du user connecté
-   
+   if(isset($_SESSION['userID'])) {
+
     $request_fetch_user_info= "SELECT * FROM `utilisateurs` where id = '$_SESSION[userID]'";
     $query_fetch_user_info = $mysqli->query($request_fetch_user_info);
     $result_fetch_user_info = $query_fetch_user_info->fetch_all();
 
+   }
 
     $message;
     $check = 1 ;
@@ -63,7 +65,7 @@
 
 
 // Ci_dessous ma requête pour supprimer le profil, et suppression en cascade de ses réservations dans la base de données.
-    if(isset($_POST['delete_profile'])) {
+    if(isset($_POST['confirm_delete'])) {
         
         $request_delete_profile_resa = "DELETE FROM `reservations` WHERE reservations.id_utilisateur = '$_SESSION[userID]'";
         $query_delete_profile_resa = $mysqli->query($request_delete_profile_resa);
@@ -95,42 +97,61 @@
     <?php include 'header.php'?>
 
     <main>
-        
+
         <form method="post" class ="formulaire">
-
-        <h2>MODIFICATION DE PROFIL</h2>
-
-        <h3>
-           <?php 
-                if(isset($_POST['profile_change'])) {
-                    echo $message;
-                }
-            ?>
-        </h3>
-
-            <label for="pseudo">Pseudo : </label>
-            <input type="text" name="pseudo" value="<?= $result_fetch_user_info[0][1]?>" >
-            <br>       
-<!-- infos des values récupérées grâce à ma requête sql du haut de la page -->
-
-            <label for="new_mdp">Nouveau mot de passe : </label>
-            <input type="password" name="new_mdp">
-            <br>
-
-            <label for="new_mdp_confirm">Confirmez votre nouveau mot de passe</label>
-            <input type="password" name="new_mdp_confirm">
-            <br>
-
-            <label for="mdp">Tapez votre ancien mot de passe pour confirmer les changements</label>
-            <input type="password" name="mdp">
-            <br>
-
-            <button type="submit" name="profile_change">Modifier</button>
         
-        </form>
+        <?php if(isset($_SESSION['userID']) && isset($_POST['delete_profile'])): ?>
+            
+            <h3>Vous êtes sur le point de supprimer votre profil, ainsi que vos réservations.</h3>
 
-        <form method="post" class="formulaire">
-                <button type="submit" id="delete_profile" name="delete_profile">Supprimer mon compte</button>
+            <button type="submit" id="cancel_delete" name="cancel_delete">Annuler</button>
+
+            <button type="submit" id="confirm_delete" name="confirm_delete">Confirmer</button>
+
+
+        <?php elseif(isset($_SESSION['userID']) || isset($_POST['cancel_delete'])): ?>
+
+            <h2>MODIFICATION DE PROFIL</h2>
+
+            <h3>
+            <?php 
+                    if(isset($_POST['profile_change'])) {
+                        echo $message;
+                    }
+                ?>
+            </h3>
+
+                <label for="pseudo">Pseudo : </label>
+                <input type="text" name="pseudo" value="<?= $result_fetch_user_info[0][1]?>" >
+                <br>       
+    <!-- infos des values récupérées grâce à ma requête sql du haut de la page -->
+
+                <label for="new_mdp">Nouveau mot de passe : </label>
+                <input type="password" name="new_mdp">
+                <br>
+
+                <label for="new_mdp_confirm">Confirmez votre nouveau mot de passe</label>
+                <input type="password" name="new_mdp_confirm">
+                <br>
+
+                <label for="mdp">Tapez votre ancien mot de passe pour confirmer les changements</label>
+                <input type="password" name="mdp">
+                <br>
+
+                <button type="submit" name="profile_change">Modifier</button>
+            
+            </form>
+
+            <form method="post" class="formulaire">
+                    <button type="submit" id="delete_profile" name="delete_profile">Supprimer mon compte</button>
+        
+
+        <?php elseif(!isset($_SESSION['userID'])) : ?>
+
+            <h3> Pas de compte, pas de profil ! </h3>
+
+        <?php endif ?>
+        
         </form>
 
     </main>

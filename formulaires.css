@@ -105,3 +105,8 @@
         padding: 20px;
         height: fit-content;
     }
+
+    #confirm_delete {
+        margin-top: 40px;
+        background-color: red;
+    }

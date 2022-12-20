@@ -94,7 +94,7 @@ if(isset($_POST['inscription'])){
                 <?php if(isset($_POST['inscription'])) echo $message ?>
             </h3>
 
-            <?php if(!isset($_POST['inscription']) || $check == 0): ?>
+            <?php if(!isset($_POST['inscription']) && $check !== 1): ?>
 
                 <label for="pseudo">Pseudo:</label>
                 <input type="text" name="pseudo">
