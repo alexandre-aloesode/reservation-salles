@@ -77,7 +77,7 @@ function add_modify_event() {
 
 // Ici je vais avoir besoin de séparer les events sur une journée de ceux sur plusieurs jours. Pour l'event sur une journée je crée une boucle qui part de l'heure de départ 
 // à l'heure de fin et me renvoie l'erreur s'il y a un match dans la base de données. Pour l'event sur plusieurs journées je commence par une boucle avec la variable k qui va 
-//du jour de début au jour de fin.
+//du jour de début au jour de fin. Il me reste à gérer les résa qui se font sur 2 mois distincts.
 
             if(isset($_POST['reservation'])) {    
                 
