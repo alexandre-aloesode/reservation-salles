@@ -10,70 +10,60 @@
     $query_fetch_user_info = $mysqli->query($request_fetch_user_info);
     $result_fetch_user_info = $query_fetch_user_info->fetch_all();
 
-    $message_profil;
-    $user = 1;
 
-    if(isset($_POST['profil_change'])) {  
+    $message;
+    $check = 1 ;
 
-        if(empty($_POST['profil_pseudo']) || empty($_POST['profil_new_mdp']) || trim($_POST['profil_pseudo'] == '' || trim($_POST['profil_new_mdp'])) == '') {
-            $message_profil = 'Certains champs sont vides';
+    if(isset($_POST['profile_change'])) {  
+
+        if(empty($_POST['pseudo']) || empty($_POST['new_mdp']) || trim($_POST['pseudo'] == '' || trim($_POST['new_mdp'])) == '') {
+            $check = 0;
+            $message = 'Certains champs sont vides';
         }
 
-        elseif($_POST['profil_new_mdp'] !== $_POST['new_mdp_confirm']) {
-            $message_profil = 'Les nouveaux mots de passe ne correspondent pas';
+        if($_POST['new_mdp'] !== $_POST['new_mdp_confirm']) {
+            $check = 0;
+            $message = 'Les nouveaux mots de passe ne correspondent pas';
         }
 
-        elseif(!password_verify($_POST['mdp'], $result_fetch_user_info[0][2])) {
-            $message_profil = 'Ancien mot de passe incorrect.';
-        }
-// Après mon isset qui vérifie si l'utilisateur a cliqué sur le bouton, je commence par vérifier avec le 1er if si tous les champs sont 
-// remplis. Le 2eme if vérifie si les 2 nouveaux mdp concordent, le 3eme si l'ancien mot de passe est bon. Si ces 3 conditions sont remplies 
-// je passe à la suite ci-dessous, qui se lance si l'ancien mdp est juste.
+        if($check == 1) {
 
-        elseif(password_verify($_POST['mdp'], $result_fetch_user_info[0][2])) {
-
-            if(!empty($_POST['profil_pseudo']) && $_POST['profil_pseudo'] !==  $result_fetch_user_info[0][1]) {         
-                $request_user= "SELECT `login` FROM `utilisateurs`";
-                $query_user = $mysqli->query($request_user);
-                $result_user = $query_user->fetch_all();
-                for($x = 0; isset($result_user[$x]); $x++ ) {
-                    for($i = 0; isset($result_user[$x][$i]); $i++)
-                        if($result_user[$x][$i] == $_POST['profil_pseudo']) {
-                            $user = 0;
-                        }
-                }
-// Ci-dessus la même requête et la même boucle for que dans inscription qui me permettent de vérifier si le nouveau login existe déjà, 
-// et me renvoient $user=0 si c'est le cas.
-
-                if($user == 0) {
-                    $message_profil = "Ce nom d'utilisateur existe déjà";
-                }
-
-                else {
-                $update_user_profil = "UPDATE utilisateurs 
-                SET login = '$_POST[profil_pseudo]' 
-                WHERE id= '$_SESSION[userID]'";
-                $query_update_user_profil = $mysqli->query($update_user_profil);
-                $message_profil = "informations modifiées.";
-                }
+            if(!password_verify($_POST['mdp'], $result_fetch_user_info[0][2])) {
+                $check = 0;
+                $message = 'Ancien mot de passe incorrect';
             }
 
-// J'ai séparé les modifs du pseudo et du mdp, donc pour éviter que la modif du mdp se lance même si le nouveau pseudo choisi existe 
-// déjà, je rajoute également la condition $user=1 en dessous.
+            if($check == 1) {   
 
-            if(!empty($_POST['profil_new_mdp']) && $_POST['profil_new_mdp'] == $_POST['new_mdp_confirm'] && $user == 1) {
-                $modified_mdp_hashed = password_hash($_POST['profil_new_mdp'], PASSWORD_DEFAULT);
-                $update_user_profil = "UPDATE utilisateurs 
-                SET password = '$modified_mdp_hashed' 
-                WHERE id= '$_SESSION[userID]'";
-                $query_update_user_profil = $mysqli->query($update_user_profil);
-                $message_profil = "informations modifiées.";
-            }    
+                $request_user_info= "SELECT * FROM `utilisateurs`";
+                $query_user_info = $mysqli->query($request_user_info);
+                $result_user_info = $query_user_info->fetch_all();
+
+                for($x = 0; isset($result_user_info[$x]); $x++ ) {
+                        if($result_user_info[$x][1] == $_POST['pseudo'] && $result_user_info[$x][0] !== $_SESSION['userID']) {
+                            $check = 0;
+                            $message = 'Ce pseudo existe déjà';
+                        }
+                }
+            }
+        }
+
+        if($check == 1) {
+                
+        $modified_mdp_hashed = password_hash($_POST['new_mdp'], PASSWORD_DEFAULT);
+
+        $update_user_profile = "UPDATE utilisateurs 
+        SET login = '$_POST[pseudo]', password = '$modified_mdp_hashed' 
+        WHERE id= '$_SESSION[userID]'";
+        $query_update_user_profile = $mysqli->query($update_user_profile);
+
+        $message = "informations modifiées.";
         }
     }
 
+
 // Ci_dessous ma requête pour supprimer le profil, et suppression en cascade de ses réservations dans la base de données.
-    if(isset($_POST['delete_profile'])){
+    if(isset($_POST['delete_profile'])) {
         
         $request_delete_profile_resa = "DELETE FROM `reservations` WHERE reservations.id_utilisateur = '$_SESSION[userID]'";
         $query_delete_profile_resa = $mysqli->query($request_delete_profile_resa);
@@ -112,19 +102,19 @@
 
         <h3>
            <?php 
-                if(isset($_POST['profil_change'])) { 
-                        echo $message_profil;
+                if(isset($_POST['profile_change'])) {
+                    echo $message;
                 }
             ?>
         </h3>
 
             <label for="pseudo">Pseudo : </label>
-            <input type="text" name="profil_pseudo" value="<?= $result_fetch_user_info[0][1]?>" >
+            <input type="text" name="pseudo" value="<?= $result_fetch_user_info[0][1]?>" >
             <br>       
 <!-- infos des values récupérées grâce à ma requête sql du haut de la page -->
 
             <label for="new_mdp">Nouveau mot de passe : </label>
-            <input type="password" name="profil_new_mdp">
+            <input type="password" name="new_mdp">
             <br>
 
             <label for="new_mdp_confirm">Confirmez votre nouveau mot de passe</label>
@@ -135,7 +125,7 @@
             <input type="password" name="mdp">
             <br>
 
-            <button type="submit" name="profil_change">Modifier</button>
+            <button type="submit" name="profile_change">Modifier</button>
         
         </form>
 

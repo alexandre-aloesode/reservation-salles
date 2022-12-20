@@ -1,58 +1,55 @@
 <?php
 
-// variable user suivie de la requète pour vérifier que le nom de login n'existe pas déjà. 
-// Si le nom existe déjà la requète renvoie la valeur 0 à $user
-    
-    if(isset($_POST['inscription'])){
+include 'connecSQL.php';
 
-        $check_create = 1;
+$request_user_info= "SELECT * FROM `utilisateurs`";
+$query_user_info = $mysqli->query($request_user_info);
+$result_user_info = $query_user_info->fetch_all();
 
-        if(empty($_POST['pseudo']) || empty($_POST['mdp']) || trim($_POST['pseudo'] == '' || trim($_POST['mdp'])) == '') {
-            
-            $check_create = 0;
-            $message = 'Certains champs sont vides';
+$message;
+$check = 1;
+
+if(isset($_POST['inscription'])){
+
+    if(empty($_POST['pseudo']) || empty($_POST['mdp']) || trim($_POST['pseudo'] == '' || trim($_POST['mdp'])) == '') {
+        
+        $check = 0;
+        $message = 'Certains champs sont vides';
+    }
+
+    if($_POST['mdp'] !== $_POST['mdp_confirm']) {
+        $check = 0;
+        $message =  'Les mots de passe ne correspondent pas';
+    }
+
+    if ($check == 1) {
+
+        for($x = 0; isset($result_user_info[$x]); $x++ ) {
+
+                if($result_user_info[$x][1] == $_POST['pseudo']) {
+                    $check = 0 ;
+                    $message = 'Ce pseudo existe déjà';
+                }
+        } 
+    }
+        
+    if($check == 1) {
+
+        $login = $_POST['pseudo'];
+        $mdp_hash = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
+        $request_create = "INSERT INTO `utilisateurs`(`login`, `password`) VALUES ('$login','$mdp_hash')";
+        $query_create = $mysqli->query($request_create);
+
+// Les lignes ci_dessous me permettent de connecter automatiquement l'utilisateur après avoir créé son compte. Ensuite dans connec.php je vais récupérer son ID.
+        if(session_id() == '') {
+            session_start();
+            $_SESSION['user'] = $_POST['pseudo'];
         }
-
-        if($_POST['mdp'] !== $_POST['mdp_confirm']) {
-            $check_create = 0;
-            $message =  'Les mots de passe ne correspondent pas';
-        }
-
-        if ($check_create == 1) {
             
-            include 'connecSQL.php';
-            
-            $request_user= "SELECT `login` FROM `utilisateurs`";
-            $query_user = $mysqli->query($request_user);
-            $result_user = $query_user->fetch_all();
+        $message =  'Compte créé avec succès. <br> Vous êtes désormais connecté.';
+    }
+}
 
-            for($x = 0; isset($result_user[$x]); $x++ ) {
-
-                    if($result_user[$x][0] == $_POST['pseudo']) {
-                        $check_create = 0 ;
-                        $message = 'Ce pseudo existe déjà';
-                    }
-            } 
-        }
-            
-        if($check_create == 1) {
-
-            $login = $_POST['pseudo'];
-            $mdp_hash = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
-            $request_create = "INSERT INTO `utilisateurs`(`login`, `password`) VALUES ('$login','$mdp_hash')";
-            $query_create = $mysqli->query($request_create);
-                
-
-// Les lignes ci_dessous me permettent de connecter automatiquement l'utilisateur après avoir créé son compte. Ensuite dans connec.php je vais récupérer son ID. 
-
-            if(session_id() == '') {
-                session_start();
-                $_SESSION['user'] = $_POST['pseudo'];
-            }
-            
-            $message =  'Compte créé avec succès. <br> Vous êtes désormais connecté.';
-            }
-        }
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +67,7 @@
     <link href="footer.css" rel = "stylesheet">
     <title>Inscription</title>
 </head>
+
 <body>
 
     <?php include 'header.php' ?>
@@ -80,12 +78,15 @@
 
             <h2>
                 <?php
-                    if(isset($_POST['inscription']) && $check_create == 1 ) {
+
+                    if(isset($_POST['inscription']) && isset($_SESSION['user'])) {
                         echo 'Félicitations!';
                     }
+
                     else {
                         echo 'INSCRIPTION';
                     }
+
                 ?> 
             </h2>
 
@@ -93,9 +94,8 @@
                 <?php if(isset($_POST['inscription'])) echo $message ?>
             </h3>
 
-            <?php
-                if(!isset($_POST['inscription']) || $check_create == 0):
-            ?>
+            <?php if(!isset($_POST['inscription']) || $check == 0): ?>
+
                 <label for="pseudo">Pseudo:</label>
                 <input type="text" name="pseudo">
                 <br>
@@ -109,6 +109,7 @@
                 <br>
 
                 <button type="submit" name="inscription">Créer votre compte</button>
+
         </form>
             
             <?php endif; ?>

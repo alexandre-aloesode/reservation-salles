@@ -1,7 +1,109 @@
 <?php
 
-    function horaires($debut, $fin, $compare) {
+function create_modify_delete_profile() {
 
+    include 'connecSQL.php';
+
+    $request_user_info= "SELECT * FROM `utilisateurs`";
+    $query_user_info = $mysqli->query($request_user_info);
+    $result_user_info = $query_user_info->fetch_all();
+
+    $message;
+    $check = 1;
+
+    if(isset($_POST['inscription'])){
+
+        if(empty($_POST['pseudo']) || empty($_POST['mdp']) || trim($_POST['pseudo'] == '' || trim($_POST['mdp'])) == '') {
+            
+            $check = 0;
+            $message = 'Certains champs sont vides';
+        }
+
+        if($_POST['mdp'] !== $_POST['mdp_confirm']) {
+            $check = 0;
+            $message =  'Les mots de passe ne correspondent pas';
+        }
+
+        if ($check == 1) {
+
+            for($x = 0; isset($result_user_info[$x]); $x++ ) {
+
+                    if($result_user_info[$x][1] == $_POST['pseudo']) {
+                        $check = 0 ;
+                        $message = 'Ce pseudo existe déjà';
+                    }
+            } 
+        }
+            
+        if($check == 1) {
+
+            $login = $_POST['pseudo'];
+            $mdp_hash = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
+            $request_create = "INSERT INTO `utilisateurs`(`login`, `password`) VALUES ('$login','$mdp_hash')";
+            $query_create = $mysqli->query($request_create);
+
+// Les lignes ci_dessous me permettent de connecter automatiquement l'utilisateur après avoir créé son compte. Ensuite dans connec.php je vais récupérer son ID.
+            if(session_id() == '') {
+                session_start();
+                $_SESSION['user'] = $_POST['pseudo'];
+            }
+                
+            $message =  'Compte créé avec succès. <br> Vous êtes désormais connecté.';
+        }
+    }
+
+    
+
+    if(isset($_POST['profile_change'])) {  
+
+        if(empty($_POST['pseudo']) || empty($_POST['new_mdp']) || trim($_POST['pseudo'] == '' || trim($_POST['new_mdp'])) == '') {
+            $check = 0;
+            $message = 'Certains champs sont vides';
+        }
+
+        if($_POST['new_mdp'] !== $_POST['new_mdp_confirm']) {
+            $check = 0;
+            $message = 'Les nouveaux mots de passe ne correspondent pas';
+        }
+
+        if($check == 1) {
+
+            if(!password_verify($_POST['mdp'], $result_user_info[0][2])) {
+                $check = 0;
+                $message = 'Ancien mot de passe incorrect';
+            }
+
+            if($check == 1) {   
+
+                for($x = 0; isset($result_user_info[$x]); $x++ ) {
+                        if($result_user_info[$x][1] == $_POST['pseudo'] && $result_user_info[$x][0] !== $_SESSION['userID']) {
+                            $check = 0;
+                            $message = 'Ce pseudo existe déjà';
+                        }
+                }
+            }
+        }
+
+        if($check == 1) {
+                
+        $modified_mdp_hashed = password_hash($_POST['new_mdp'], PASSWORD_DEFAULT);
+
+        $update_user_profile = "UPDATE utilisateurs 
+        SET login = '$_POST[pseudo]', password = '$modified_mdp_hashed' 
+        WHERE id= '$_SESSION[userID]'";
+        $query_update_user_profile = $mysqli->query($update_user_profile);
+
+        $message = "informations modifiées.";
+        }
+    }
+
+    return $message;
+    
+    }
+
+
+
+    function horaires($debut, $fin, $compare) {
 
             for($x = $debut ; $x <= $fin; $x++) {
 
@@ -28,10 +130,12 @@
     }
 
 
+
+
 function add_modify_event() {
 
     include 'connecSQL.php';
-        
+
     $check = 1;
     $message = '';
     

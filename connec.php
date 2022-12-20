@@ -7,10 +7,13 @@
 //Je connecte automatiquement l'utilisateur qui a créé son compte, et j'ai besoin de récupéré son ID ensuite. Je le fais grâce aux lignes du dessus
     if(isset($_SESSION['user']) && !isset($_SESSION['userID'])) {
 
-                $request_ID_user = "SELECT `id` FROM `utilisateurs` WHERE login = '$_SESSION[user]'";
-                $query_ID_user = $mysqli->query($request_ID_user);
-                $result_ID_user = $query_ID_user->fetch_all();
-                $_SESSION['userID'] = $result_ID_user[0][0];
+        include 'connecSQL.php';
+
+        $request_ID_user = "SELECT `id` FROM `utilisateurs` WHERE login = '$_SESSION[user]'";
+        $query_ID_user = $mysqli->query($request_ID_user);
+        $result_ID_user = $query_ID_user->fetch_all();
+
+        $_SESSION['userID'] = $result_ID_user[0][0];
     }   
 
     if(isset($_GET['deco']) && $_GET['deco'] == 'deco'){
@@ -26,16 +29,19 @@
     if(isset($_POST['connexion'])) {
 
         include 'connecSQL.php';
-        $request_login= "SELECT `login`, `password`,`id` FROM `utilisateurs`";
+        $request_login= "SELECT * FROM `utilisateurs`";
         $query_login = $mysqli->query($request_login);
         $result_login = $query_login->fetch_all();
 
         for($x = 0; isset($result_login[$x]); $x++){
-            if($result_login[$x][0] == $_POST['pseudo']){
+
+            if($result_login[$x][1] == $_POST['pseudo']){
+                
                 $check ++;
-                    if(password_verify($_POST['mdp'], $result_login[$x][1])) {
+
+                    if(password_verify($_POST['mdp'], $result_login[$x][2])) {
                         $check ++;
-                        $_SESSION['userID'] = $result_login[$x][2];
+                        $_SESSION['userID'] = $result_login[$x][0];
                     }
             }       
         }

@@ -67,7 +67,7 @@ $date = new DateTime("$_SESSION[date]"); new DateTimeZone("Europe/Paris");
 }
 
 //  Pour générer mon tableau j'ai 3 boucle for:
-//  La première génère 12 lignes, à savoir les 12 créneaux horires de 8 à 19h
+//  La première génère 11 lignes, à savoir les 11 créneaux horires de 8 à 19h
 //  La deuxième génère les colonnes, à savoir les 7 jours
 //  la 3ême vient parcourir ma requete dans les reservations et m'affiche l'évènement s'il y a un match de date.
 

@@ -22,15 +22,15 @@
 
  <main>
 
- <form method="get" id ="calendar">
+    <form method="get" id ="calendar">
 
-    <button type="submit" name="previous_week" id="previous_week"> <i class="fa-solid fa-angles-left"> </i> </button>
+        <button type="submit" name="previous_week" id="previous_week"> <i class="fa-solid fa-angles-left"> </i> </button>
 
-    <button type="submit" name="reset" id="today_button">Reset</button>
+        <button type="submit" name="reset" id="today_button">Reset</button>
 
-    <button type="submit" name="next_week" id="next_week"> <i class="fa-solid fa-angles-right"> </i></button>
+        <button type="submit" name="next_week" id="next_week"> <i class="fa-solid fa-angles-right"> </i></button>
 
- </form>
+    </form>
  
     <table>
 
