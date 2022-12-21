@@ -48,7 +48,7 @@
                     <input type="password" name="mdp" class="form_input">
                     <br>
 
-                    <button type="submit" name="connexion">Connexion</button>
+                    <button type="submit" name="connexion">Se connecter</button>
                 
                 <?php endif ?>
             </form>    

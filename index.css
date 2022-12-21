@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Roboto:ital,wght@1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 
 body {
     margin: 0;
     background-color: #F8F4F9;
-    font-family: 'Poppins', sans-serif;  
+    font-family: 'Roboto', sans-serif; 
 }
 
 main {
@@ -12,5 +13,21 @@ main {
     margin: 10%;
     margin-top: 5%;
     align-items: center;
-    margin-bottom: 375px;
 }
+
+mainindex{
+    background-image: url(http://s3.eu-west-3.amazonaws.com/actinbusiness.com/wp-content/uploads/2021/09/09180803/visu-entreprise-comment-reamenager-vos-salles-de-reunion.jpg);
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20%;
+    align-items: center;
+    padding-top: 10%;
+   
+}
+    mainindex a{
+        text-decoration: none;
+        color: black;
+        text-decoration: underline;
+    }

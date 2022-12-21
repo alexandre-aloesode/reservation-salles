@@ -14,11 +14,13 @@ main {
 
     #calendar button {
         font-size: 130%;
+        border-radius: 10%;
     }
 
     #previous_week:hover {
         transform: translateX(-5px);
         background-color: gold;
+        
     }
 
     #today_button:hover {
@@ -128,5 +130,6 @@ table a {
     .bookable:hover {
         background-color: gold;
     }
+    
 
 

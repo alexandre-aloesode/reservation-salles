@@ -22,7 +22,7 @@
 
  <main>
 
-    <form method="get" id ="calendar">
+    <form method="get" id ="calendar" class="formulaire">
 
         <button type="submit" name="previous_week" id="previous_week"> <i class="fa-solid fa-angles-left"> </i> </button>
 

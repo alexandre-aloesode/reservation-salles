@@ -108,7 +108,7 @@ if(isset($_POST['inscription'])){
                 <input type="password" name="mdp_confirm">
                 <br>
 
-                <button type="submit" name="inscription">Créer votre compte</button>
+                <button type="submit" name="inscription">S'inscrire</button>
 
         </form>
             

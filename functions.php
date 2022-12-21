@@ -208,7 +208,7 @@ function add_modify_event() {
                 
                 $query_modify_event = $mysqli->query($request_modify_event);
                 
-                $message = 'modification effectuée';   
+                $message = 'modification effectuée';
             }   
         }
 
