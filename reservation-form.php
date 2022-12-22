@@ -3,6 +3,7 @@
 include 'connecSQL.php';
 include 'connec.php';
 include 'functions.php';
+include 'generate-planning.php';
         
 ?>
 
@@ -26,23 +27,40 @@ include 'functions.php';
 
     <?php include 'header.php' ?>
 
-    <main> 
+    <main id="resa-form-main"> 
+        <section id="resa-form">
+
+    <table>
+
+<thead>
+
+    <tr>
+
+        <th></th>
+
+        <?php jours_small_planning() ?>
+
+    </tr>
+
+</thead>
+
+<tbody>
+
+    <?php corps_small_planning($result_events) ?>  
+
+</tbody>
+
+</table>
 
         <form method="post" class ="formulaire">
 
             <h2>Formulaire de réservation</h2>
-
-            <h3>
-                <?php 
-                    if(isset($_POST['reservation'])) { 
-                        echo add_modify_event();
-                    }
-                ?>
-            </h3>
+            
+            <?php if(isset($_POST['reservation'])) echo '<h3>' . add_modify_event() . '</h3>' ?>     
 
             <?php if(isset($_SESSION['userID'])): ?>
 
-                <p>Utilisateur : <?php if(isset($_SESSION['user'])) echo $_SESSION['user'] ?> </p>
+                <p id="title-user">Utilisateur : <?php if(isset($_SESSION['user'])) echo $_SESSION['user'] ?> </p>
                 <br>
 
                 <label for="titre">Titre :</label>
@@ -73,7 +91,7 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
                 <br>
            
                 <label for="desc">Description : </label>
-                <textarea name="desc"></textarea>
+                <textarea name="desc" id="desc"></textarea>
                 <br>
 
                 <button type="submit" name="reservation">Soumettre</button>
@@ -84,6 +102,7 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
                     <p>Connectez-vous pour faire une réservation</p>
 
                 <?php endif; ?>
+                </section>
     </main>
 
     <?php include 'footer.php' ?>

@@ -185,4 +185,89 @@ function corps_planning($requete_events) {
 
 }
 
+function jours_small_planning() {
+
+    if(isset($_GET['date'])) {
+
+        $date = new DateTime("$_GET[date]"); new DateTimeZone("Europe/Paris");
+    }
+
+    else {
+
+        $date = new DateTime("$_SESSION[date]"); new DateTimeZone("Europe/Paris");
+    }
+    
+                    for($x = 0; $x < 7; $x++){
+               
+                        echo '<th>' . $date->format('D j/m') . '</th>';
+    
+                        $date->modify("next day");        
+                    }
+    }
+    
+    
+    function corps_small_planning($requete_events) {
+    
+        for($x = 0; $x < 11; $x++) {  
+
+            if(isset($_GET['date'])) {
+    
+                $date = new DateTime("$_GET[date] midnight + 8 hours + $x hours"); new DateTimeZone("Europe/Paris");
+                $date_creneau_sup = new DateTime("$_GET[date] midnight + 8 hours + $x hours"); new DateTimeZone("Europe/Paris");
+            }
+
+            else {
+
+                $date = new DateTime("$_SESSION[date] midnight + 8 hours + $x hours"); new DateTimeZone("Europe/Paris");
+                $date_creneau_sup = new DateTime("$_SESSION[date] midnight + 8 hours + $x hours"); new DateTimeZone("Europe/Paris");
+
+            }
+    
+            echo '<tr>';
+    
+                echo '<td class="creneaux">' . $date->format('H') . ' à<br>' . $date_creneau_sup->modify("+ 1 hour")->format('H') .' H </td>';
+    
+                    for($i = 0; $i < 7; $i++) {
+    
+                        echo '<td>';
+    
+                            $check = 1;
+
+                            if($date->format('D')== 'Sat' || $date->format('D')== 'Sun') {
+    
+                                echo '<p class="closed"> Fermé</p>';
+                                $check = 0;
+                            }
+                        
+                            for($j = 0; isset($requete_events[$j]); $j++){
+            
+                                $date_sql_debut = new DateTime($requete_events[$j][2]);
+                   
+                                $date_sql_fin = new DateTime($requete_events[$j][3]);
+                                $date_sql_fin -> modify("-1 hour");
+    
+                                if($date->format('Y-m-d H') >= $date_sql_debut->format('Y-m-d H') && $date->format('Y-m-d H') <= $date_sql_fin->format('Y-m-d H')) {
+                                       
+                                    $check = 0;
+                                         
+                                        echo '<p class="booked"> Pris </p>';                                                                                                              
+                                }                                                                 
+                            }
+    
+                            if($check == 1){
+                                     
+                                echo '<p class="bookable"></p>';
+                                
+                            }
+                            
+                        echo '</td>';
+    
+                        $date->modify("next day");                          
+                    }   
+    
+            echo '</tr>';                        
+        }
+    
+    }
+
 ?>
