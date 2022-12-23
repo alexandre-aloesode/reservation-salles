@@ -133,6 +133,11 @@
     padding: 10px;
     }
 
+    #small_planning { 
+        width: 40%;
+        margin-right: 20px;
+    }
+
     #resa-form h2{
         font-size: 100%;
         margin-bottom: 10px;
@@ -179,11 +184,40 @@
         font-size: 90%;
     }
 
+    #small_calendar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    
+        #small_calendar button {
+            font-size: 100%;
+            border-radius: 10%;
+        }
+    
+        #small_previous_week:hover {
+            transform: translateX(-5px);
+            background-color: gold;
+            
+        }
+    
+        #small_today_button:hover {
+            background-color: gold;
+            transform: scale(1.15);
+            transition-duration: 0.5s;
+        }
+    
+        #small_next_week:hover {
+            transform: translateX(5px);
+            background-color: gold;
+        }
+
     table {
-    font-size: 50%;
-    width: 30%;
-    margin-right: 30px;
-    height: 40%;
+        font-size: 70%;
+        width: 100%;
+        margin-right: 30px;
+        height: 40%;
     }
 
     th {

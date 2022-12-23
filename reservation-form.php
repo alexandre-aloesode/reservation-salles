@@ -28,29 +28,44 @@ include 'generate-planning.php';
     <?php include 'header.php' ?>
 
     <main id="resa-form-main"> 
+
         <section id="resa-form">
 
-    <table>
+            <div id="small_planning">
 
-<thead>
+                <form method="get" id ="small_calendar">
 
-    <tr>
+                    <button type="submit" name="small_previous_week" id="small_previous_week"> <i class="fa-solid fa-angles-left"> </i> </button>
 
-        <th></th>
+                    <button type="submit" name="small_reset" id="small_today_button">Reset</button>
 
-        <?php jours_small_planning() ?>
+                    <button type="submit" name="small_next_week" id="small_next_week"> <i class="fa-solid fa-angles-right"> </i></button>
 
-    </tr>
+                </form>
 
-</thead>
+                <table>
 
-<tbody>
+                    <thead>
 
-    <?php corps_small_planning($result_events) ?>  
+                        <tr>
 
-</tbody>
+                            <th></th>
 
-</table>
+                            <?php jours_small_planning() ?>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <?php corps_small_planning($result_events) ?>  
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         <form method="post" class ="formulaire">
 
@@ -102,7 +117,9 @@ Je mets donc en min de mon input ci-dessous ma variable. -->
                     <p>Connectez-vous pour faire une réservation</p>
 
                 <?php endif; ?>
-                </section>
+
+        </section>
+
     </main>
 
     <?php include 'footer.php' ?>

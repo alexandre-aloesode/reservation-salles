@@ -12,7 +12,7 @@ $query_events = $mysqli->query($request_events);
 $result_events = $query_events->fetch_all();
 
 
-// Ci-dessous je gère la navigation dans le calendrier semaine par semaine. Je crée 2 variables de session, week qui commence à 0 et augmente ou diminue de 1, 
+// Ci-dessous je gère la navigation dans le calendrier et le mini calendrier semaine par semaine. Je crée 2 variables de session, week qui commence à 0 et augmente ou diminue de 1, 
 // et date qui gère la requête de la classe DateTime.
 
 if(!isset($_SESSION['week'])) {
@@ -23,7 +23,7 @@ if($_SESSION['week'] == 0) {
     $_SESSION['date'] = 'this week';
 }
     
-if(isset($_GET['next_week'])) {
+if(isset($_GET['next_week']) || isset($_GET['small_next_week'])) {
 
     $_SESSION['week'] ++;
 
@@ -35,22 +35,42 @@ if(isset($_GET['next_week'])) {
         $_SESSION['date'] ="this week + $_SESSION[week] weeks";
     }
 
-    header('Location: planning.php');
+    if(isset($_GET['small_next_week'])) {
+
+        header('Location: reservation-form.php');
+    }
+    else {
+        header('Location: planning.php');
+    }
 }
 
-if(isset($_GET['previous_week'])){
+if(isset($_GET['previous_week']) || isset($_GET['small_previous_week'])){
 
     $_SESSION['week'] --;
 
     $_SESSION['date'] = "this week  $_SESSION[week] weeks";
 
-    header('Location: planning.php');
+    if(isset($_GET['small_previous_week'])) {
+
+        header('Location: reservation-form.php');
+    }
+    else {
+        header('Location: planning.php');
+    }
 }
 
-if(isset($_GET['reset'])){
+if(isset($_GET['reset']) || isset($_GET['small_reset'])){
+
     $_SESSION['week'] = 0;
     $_SESSION['date'] = 'this week';
-    header('Location: planning.php');
+
+    if(isset($_GET['small_reset'])) {
+
+        header('Location: reservation-form.php');
+    }
+    else {
+        header('Location: planning.php');
+    }
 }
 
 // Ci-dessous la boucle qui m'affiche les titres du tableau, à savoir les jours de la semaine.
@@ -209,7 +229,8 @@ function jours_small_planning() {
     function corps_small_planning($requete_events) {
     
         for($x = 0; $x < 11; $x++) {  
-
+//Si l'utilisateur a cliqué sur un créneau du planning pour avoir les horaires pré-rempli, le mini-planning lui affiche les dispo en commencant par la date de début
+// et les 6 jours suivants. Sinon ça lui affiche la semaine en cours.
             if(isset($_GET['date'])) {
     
                 $date = new DateTime("$_GET[date] midnight + 8 hours + $x hours"); new DateTimeZone("Europe/Paris");
